@@ -1,0 +1,180 @@
+{
+  "timetable": {
+      "year1": {
+        "schedule": {
+          "Monday": [
+            { "period": 1, "subject": "Math", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+            { "period": 2, "subject": "Physics", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+            { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+            { "period": 4, "subject": "Chemistry Lab", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+            { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+            { "period": 6, "subject": "English", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+            { "period": 7, "subject": "Computer Science", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+            { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+            { "period": 9, "subject": "History", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+          ],
+          "Tuesday": [
+            { "period": 1, "subject": "Biology", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+            { "period": 2, "subject": "Math", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+            { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+            { "period": 4, "subject": "Physics Lab", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+            { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+            { "period": 6, "subject": "Chemistry", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+            { "period": 7, "subject": "Geography", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+            { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+            { "period": 9, "subject": "English", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+          ],
+          "Wednesday": [
+            { "period": 1, "subject": "Physics", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+            { "period": 2, "subject": "Chemistry", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+            { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+            { "period": 4, "subject": "Computer Lab", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+            { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+            { "period": 6, "subject": "History", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+            { "period": 7, "subject": "Math", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+            { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+            { "period": 9, "subject": "English", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+          ],
+          "Thursday": [
+              { "period": 1, "subject": "English", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+              { "period": 2, "subject": "Computer Science", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+              { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+              { "period": 4, "subject": "Biology Lab", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+              { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+              { "period": 6, "subject": "Math", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+              { "period": 7, "subject": "Physics", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+              { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+              { "period": 9, "subject": "Geography", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+          ],
+          "Friday": [
+              { "period": 1, "subject": "Chemistry", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+              { "period": 2, "subject": "History", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+              { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+              { "period": 4, "subject": "Physics Lab", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+              { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+              { "period": 6, "subject": "English", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+              { "period": 7, "subject": "Computer Science", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+              { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+              { "period": 9, "subject": "Math", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+          ]
+        }
+      },
+      "year2": {
+      "schedule": {
+        "Monday": [
+          { "period": 1, "subject": "Digital Electronics", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+          { "period": 2, "subject": "Signals & Systems", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+          { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+          { "period": 4, "subject": "Microprocessors Lab", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+          { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+          { "period": 6, "subject": "Electromagnetic Fields", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+          { "period": 7, "subject": "Communication Systems", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+          { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+          { "period": 9, "subject": "Analog Circuits", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+        ],
+        "Tuesday": [
+          { "period": 1, "subject": "Control Systems", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+          { "period": 2, "subject": "Digital Electronics", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+          { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+          { "period": 4, "subject": "Signals & Systems", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+          { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+          { "period": 6, "subject": "Analog Circuits", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+          { "period": 7, "subject": "Electromagnetic Fields", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+          { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+          { "period": 9, "subject": "Communication Systems", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+        ],
+        "Wednesday": [
+          { "period": 1, "subject": "Microprocessors Lab", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+          { "period": 2, "subject": "Communication Systems", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+          { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+          { "period": 4, "subject": "Electromagnetic Fields", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+          { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+          { "period": 6, "subject": "Control Systems", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+          { "period": 7, "subject": "Analog Circuits", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+          { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+          { "period": 9, "subject": "Digital Electronics", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+        ],
+        "Thursday": [
+              { "period": 1, "subject": "Signals & Systems", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+              { "period": 2, "subject": "Electromagnetic Fields", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+              { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+              { "period": 4, "subject": "Digital Electronics", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+              { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+              { "period": 6, "subject": "Microprocessors Lab", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+              { "period": 7, "subject": "Control Systems", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+              { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+              { "period": 9, "subject": "Communication Systems", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+          ],
+          "Friday": [
+              { "period": 1, "subject": "Analog Circuits", "duration": 50, "timing": "9:10 AM - 10:00 AM" },
+              { "period": 2, "subject": "Microprocessors Lab", "duration": 50, "timing": "10:00 AM - 10:50 AM" },
+              { "period": 3, "subject": "Break", "duration": 20, "timing": "10:50 AM - 11:10 AM" },
+              { "period": 4, "subject": "Communication Systems", "duration": 100, "timing": "11:10 AM - 12:50 PM" },
+              { "period": 5, "subject": "Lunch", "duration": 60, "timing": "12:50 PM - 1:50 PM" },
+              { "period": 6, "subject": "Signals & Systems", "duration": 50, "timing": "1:50 PM - 2:40 PM" },
+              { "period": 7, "subject": "Electromagnetic Fields", "duration": 50, "timing": "2:40 PM - 3:30 PM" },
+              { "period": 8, "subject": "Break", "duration": 20, "timing": "3:30 PM - 3:50 PM" },
+              { "period": 9, "subject": "Control Systems", "duration": 50, "timing": "3:50 PM - 4:30 PM" }
+          ]
+      }
+      
+    }
+  },
+    
+  "absentees": {
+    "year1":  [
+      {
+        "list": ["21EC101", "21EC105", "21EC110"],
+        "period": "1"
+      },
+      {
+        "list": ["21EC102", "21EC106"],
+        "period": "2"
+      },
+      {
+        "list": ["21EC103", "21EC107", "21EC111"],
+        "period": "3"
+      },
+      {
+        "list": ["21EC104", "21EC108"],
+        "period": "4"
+      },
+      {
+        "list": ["21EC101", "21EC109"],
+        "period": "5"
+      },
+      {
+        "list": ["21EC102", "21EC106", "21EC110"],
+        "period": "6"
+      },
+      {
+        "list": ["21EC103", "21EC107"],
+        "period": "7"
+      }
+    ]
+    ,
+    "year2":  [
+      {
+        "list": ["20EC201", "20EC210"],
+        "period": "1"
+      },
+      {
+        "list": ["20EC202"],
+        "period": "2"
+      },
+      {
+        "list": ["20EC203", "20EC207", "20EC211"],
+        "period": "3"
+      },
+      {
+        "list": ["20EC204", "20EC208"],
+        "period": "4"
+      },
+      {
+        "list": [],
+        "period": "5"
+      }
+    ]     
+  }
+}
+  

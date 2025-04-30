@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+*{
+    font-family: "Outfit";
+}
+
+html{
+    overflow-y: scroll;
+}
+
+.text-out{
+    font-family: 'Outfit' !important;
+}
+
+.text-lora{
+    font-family: 'Lora' !important;
+}
+
+.text-roboto{
+    font-family: 'Roboto' !important;
+}
+
+.navlink.active{
+    border-bottom-width: 1px ;
+    color: rgba(0.546 0.245 262.881);
+}
+
+.card-shadow{
+    box-shadow: 0px 4px 6px rgb(0, 0, 0 , 0.5);
+}
