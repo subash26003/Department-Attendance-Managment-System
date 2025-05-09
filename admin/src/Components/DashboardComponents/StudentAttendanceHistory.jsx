@@ -6,7 +6,7 @@ import Loader from "../stateLessComponents/Loader";
 import FailueView from "../stateLessComponents/FailueView";
 import StudentReportChart from "./StudentReportChart";
 
-const StudentAttendanceHistory = ({ data }) => {
+const StudentAttendanceHistory = ({ data , startDate , endDate }) => {
   const [selectedStudent, setSelectedStudent] = useState("");
 
   const [studentReport, setStudentReport] = useState();
@@ -27,6 +27,8 @@ const StudentAttendanceHistory = ({ data }) => {
         },
         params: {
           studentId:studentId,
+          startDate : startDate,
+          endDate : endDate
         },
       };
       const response = await api.get("/report", options);

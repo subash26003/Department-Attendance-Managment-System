@@ -11,7 +11,7 @@ import { sendMailToHOD, sendMailToStudent } from "../services/mailService.js";
 import { sendOtpToFaculty } from "../services/OtpService.js";
 import otpModel from "../models/optModel.js";
 import markModel from "../models/markModel.js";
-import sendMessageToParents, { sendSMStoParents } from "../services/smsService.js";
+import sendMessageToParents from "../services/smsService.js";
 import mongoose from "mongoose";
 
 
@@ -235,7 +235,7 @@ const getTodaySubjectAttendanceList = async (req, res) => {
                     as: "allStudents"
                 },
             }
-        ]).toArray()
+        ])
 
         if (!data[0]) {
             res.json({ success: false, message: "Not Updated" })
@@ -270,6 +270,39 @@ const getTodaySubjectAttendanceList = async (req, res) => {
     } catch (error) {
         console.error("e -> " + error.message);
         res.json({ success: false, message: error.message })
+    }
+}
+
+const updateDailyAttendance = async (req , res , next) => {
+    try {
+        const { subjectCode, period , day , registerNo , action} = req.body
+
+        console.log(subjectCode , period , day);
+        
+        
+        const attendance = await dailyAttendanceModel.findOne({subjectCode , period : Number.parseInt(period) , day})
+        console.log(attendance);
+        
+        if(action === "remove"){
+            attendance.absentRegisterNos = attendance.absentRegisterNos.filter(no => no !== registerNo);
+        }else{
+            if (!attendance.absentRegisterNos.includes(registerNo)) {
+                attendance.absentRegisterNos.push(registerNo);
+            }
+        }
+        await attendance.save();
+        req.query.subjectCode = subjectCode; 
+        req.query.period = period; 
+        req.query.day = day; 
+
+        console.log(attendance);
+        
+        next();
+                
+    } catch (error) {
+        res.json({success : false , message : "Server Error"})
+        console.log(error);
+        
     }
 }
 
@@ -417,25 +450,27 @@ const getStudentListWithMarks = async (req, res) => {
 const sendStudentReport = async (req, res) => {
     try {
         const { studentData } = req.body
+        console.log(studentData);
         
         const student = await studentModel.findById({_id : new mongoose.Types.ObjectId(studentData.studentId)})
-
-        let message = `Greetings from AURCC \nAcademic Report - ${student.name}\n\n`;
+        console.log(student);
+        
+        let message = `Report - ${student.name}\n`;
 
         studentData.report.forEach((subj, i) => {
-            message += `${i + 1}) ${subj.subjectName}\nMarks: ${subj.marks.internal1}, Attendance: ${subj.attendance.percentage}%\n`;
+            message += `${i + 1}) ${subj.subjectCode} - M:${subj.marks.internal1}, A:${subj.attendance.percentage}%\n`;
         });
 
-        message += '\nAny Queries contact AURCC'
+        
 
-        await sendSMStoParents(message , student.parentMobileNo)
+        await sendMessageToParents(message , student.parentMobileNo)
         res.json({ success: true })
 
     } catch (error) {
-        res.json({ success: true, message: "Server Error" })
+        res.json({ success: false, message: "Server Error" })
         console.log(error);
     }
 }
 
 
-export { handleLogin, getInitialData, getStudentListWithAttendancePercentage, getTodaySubjectAttendanceList, getRequestList, handleRequestApprovel, verifyOtp, uploadSubjectMarks, getStudentListWithMarks, sendStudentReport }
+export { handleLogin, getInitialData, getStudentListWithAttendancePercentage, getTodaySubjectAttendanceList, getRequestList, handleRequestApprovel, verifyOtp, uploadSubjectMarks, getStudentListWithMarks, sendStudentReport ,updateDailyAttendance}

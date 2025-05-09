@@ -14,7 +14,7 @@ const AcademicReportCard = ({ reportData, studentDetails }) => {
     const sendReportToParent = async () => {
         try {
             const studentData = {
-                report : reportData , studentId : studentDetails._idc
+                report : reportData , studentId : studentDetails._id
             }
             const options = {
                 headers: {
@@ -154,39 +154,12 @@ const AcademicReportCard = ({ reportData, studentDetails }) => {
                     <div className="bg-blue-100 p-2 rounded-lg">
                       <p className="text-xs text-gray-600">Average</p>
                       <p className="font-bold text-blue-800">
-                        {subject.marks.average}
+                      {(subject.marks.internal1 && subject.marks.internal2 ) ? (subject.marks.internal1 + subject.marks.internal2) / 2 : (subject.marks.internal1 || 0)}
                       </p>
                     </div>
                   </div>
 
-                  {/* Performance Indicator */}
-                  <div className="mt-2">
-                    <p className="text-sm font-medium text-gray-700 mb-1">
-                      Performance:
-                    </p>
-                    <div className="flex items-center">
-                      <div
-                        className={`w-3 h-3 rounded-full mr-2 ${
-                          subject.marks.average >= 85
-                            ? "bg-green-500"
-                            : subject.marks.average >= 70
-                            ? "bg-yellow-500"
-                            : subject.marks.average >= 50
-                            ? "bg-orange-500"
-                            : "bg-red-500"
-                        }`}
-                      ></div>
-                      <span className="text-sm">
-                        {subject.marks.average >= 85
-                          ? "Excellent"
-                          : subject.marks.average >= 70
-                          ? "Good"
-                          : subject.marks.average >= 50
-                          ? "Average"
-                          : "Needs Improvement"}
-                      </span>
-                    </div>
-                  </div>
+                  
                 </div>
               ) : (
                 <div className="text-center py-4 text-gray-500">

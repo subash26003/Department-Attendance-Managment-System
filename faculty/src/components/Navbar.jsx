@@ -66,12 +66,6 @@ const Navbar = () => {
               Profile
             </p>
             <p
-              onClick={() => naviagte("/leaveform")}
-              className=" p-2  hover:bg-gray-100 text-gray-700 cursor-pointer"
-            >
-              Leave Form
-            </p>
-            <p
               onClick={handleLogout}
               className="border-t p-2 hover:bg-gray-100 text-gray-700 cursor-pointer"
             >

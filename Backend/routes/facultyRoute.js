@@ -1,5 +1,5 @@
 import express from "express";
-import {getInitialData, handleLogin , getStudentListWithAttendancePercentage , getTodaySubjectAttendanceList , getRequestList , handleRequestApprovel, verifyOtp, uploadSubjectMarks, getStudentListWithMarks, sendStudentReport} from '../controllers/facultyController.js'
+import {getInitialData, handleLogin , getStudentListWithAttendancePercentage , getTodaySubjectAttendanceList , getRequestList , handleRequestApprovel, verifyOtp, uploadSubjectMarks, getStudentListWithMarks, sendStudentReport, updateDailyAttendance} from '../controllers/facultyController.js'
 import facultyAuth from "../middleware/facultyAuth.js";
 import { getStudentAcademicReport } from "../controllers/adminControllers/adminControl.js";
 
@@ -12,7 +12,10 @@ facultyRoute.get("/initialData" , facultyAuth , getInitialData)
 
 facultyRoute.get("/liststudent/:subjectCode" ,facultyAuth , getStudentListWithAttendancePercentage)
 
+// Today Attendance
 facultyRoute.get("/todayAttendance" ,facultyAuth ,  getTodaySubjectAttendanceList)
+facultyRoute.post("/updateAttendance" , facultyAuth , updateDailyAttendance, getTodaySubjectAttendanceList)
+
 
 facultyRoute.get("/requests" , facultyAuth , getRequestList)
 

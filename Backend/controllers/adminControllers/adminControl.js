@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"
 import attendanceRecordModel from "../../models/attendanceRecordModel.js"
 import subjectModel from "../../models/adminModels/subjectModel.js"
 import { getStundetOverAllAttendancePercentage, subjectsAttendancePercentageOfEachStudent } from "../commonFunctions/controllers.js"
-import {getSubjectWisePercentage} from "../studentControllers/studentController.js"
+import { getSubjectWisePercentage } from "../studentControllers/studentController.js"
 import markModel from "../../models/markModel.js"
 import studentModel from "../../models/adminModels/studentModel.js"
 import mongoose from "mongoose"
@@ -85,7 +85,8 @@ const getSubjectsAverageAttendance = async (req, res) => {
 const getAttendanceDashboard = async (req, res) => {
     try {
         const { year, subjectCode, studentId, startDate, endDate } = req.query;
-        console.log(subjectCode);
+        console.log(startDate);
+        console.log(endDate);
 
 
         const subjectSummary = await subjectModel.aggregate([
@@ -120,9 +121,8 @@ const getAttendanceDashboard = async (req, res) => {
                                     $and: [
                                         { $eq: ["$studentId", "$$studentId"] },
                                         { $eq: ["$subjectCode", "$$subjectCode"] },
-                                        // Add date filtering here
-                                        ...(startDate ? [{ $gte: ["$recordedAt", new Date(startDate)] }] : []),
-                                        ...(endDate ? [{ $lte: ["$recordedAt", new Date(endDate)] }] : [])
+                                        ...(startDate ? [{ $gte: ["$recordedAt", new Date(startDate).toISOString()] }] : []),
+                                        ...(endDate ? [{ $lte: ["$recordedAt", new Date(endDate).toISOString()] }] : [])
                                     ]
                                 }
                             }
@@ -191,17 +191,14 @@ const getAttendanceDashboard = async (req, res) => {
         ])
 
         let studentSummary = []
-        if(subjectCode){
-            studentSummary = await subjectsAttendancePercentageOfEachStudent(subjectCode)
-        }else{
-            studentSummary = await getStundetOverAllAttendancePercentage(year)
+        if (subjectCode) {
+            studentSummary = await subjectsAttendancePercentageOfEachStudent(subjectCode, startDate, endDate)
+        } else {
+            studentSummary = await getStundetOverAllAttendancePercentage(year, startDate, endDate)
         }
 
-
-
-
         res.json({
-            success: true, data: {subjectSummary , studentSummary}
+            success: true, data: { subjectSummary, studentSummary }
         });
 
     } catch (error) {
@@ -210,11 +207,11 @@ const getAttendanceDashboard = async (req, res) => {
     }
 };
 
-const getStudentReport = async (req , res) => {
+const getStudentReport = async (req, res) => {
     try {
-        const {studentId} = req.query 
+        const { studentId } = req.query
         const studentReport = await getSubjectWisePercentage(studentId)
-        res.json({success : true, studentReport})
+        res.json({ success: true, studentReport })
     } catch (error) {
         console.error("Error in aggregation:", error);
         throw error;
@@ -224,19 +221,27 @@ const getStudentReport = async (req , res) => {
 const getStudentAcademicReport = async (req, res) => {
     // Convert to ObjectId
     try {
-        const {studentId} = req.query 
-        console.log(studentId);
-        
+        const { studentId, startDate, endDate } = req.query
+        console.log(startDate);
+        console.log(endDate);
+
         const studentObjectId = new mongoose.Types.ObjectId(studentId);
-    
+
         // Get attendance data with percentages
         const attendanceData = await attendanceRecordModel.aggregate([
             {
                 $match: {
                     status: "absent",
-                    studentId: studentId
+                    studentId: studentId,
+                    ...(startDate && endDate && {
+                        recordedAt: {
+                          $gte: new Date(startDate).toISOString(),
+                          $lte: new Date(endDate).toISOString()
+                        }
+                      })
                 }
             },
+
             {
                 $group: {
                     _id: "$subjectCode",
@@ -259,18 +264,18 @@ const getStudentAcademicReport = async (req, res) => {
                     presentCount: {
                         $subtract: ["$subject.takenPeriod", "$totalAbsentCount"]
                     },
-    
+
                 }
             },
             {
                 $addFields: {
                     percentage: {
-    
+
                         $multiply: [
                             { $divide: ["$presentCount", "$subject.takenPeriod"] },
                             100
                         ]
-    
+
                     }
                 }
             },
@@ -280,19 +285,23 @@ const getStudentAcademicReport = async (req, res) => {
                     subjectCode: "$_id",
                     attendancePercentage: "$percentage",
                     presentCount: 1,
-    
+
                 }
             }
         ])
-        
+
+        console.log(attendanceData);
+
+
+
         // Get marks data
         const marksData = await markModel.aggregate([
             {
                 $match: { studentId: studentId }
             },
             {
-                $addFields : {
-                    subjectObjId : {$toObjectId : "$subjectId"}
+                $addFields: {
+                    subjectObjId: { $toObjectId: "$subjectId" }
                 }
             },
             {
@@ -306,7 +315,7 @@ const getStudentAcademicReport = async (req, res) => {
             {
                 $unwind: "$subject"
             },
-           
+
             {
                 $project: {
                     _id: 0,
@@ -316,9 +325,9 @@ const getStudentAcademicReport = async (req, res) => {
                 }
             }
         ])
-    
-        
-    
+
+
+
         // Get all enrolled subjects
         const enrolledSubjects = await studentModel.aggregate([
             {
@@ -343,7 +352,7 @@ const getStudentAcademicReport = async (req, res) => {
                             $project: {
                                 subjectName: "$name",
                                 subjectCode: "$code",
-                                takenPeriod : "$takenPeriod"
+                                takenPeriod: "$takenPeriod"
                             }
                         }
                     ],
@@ -357,14 +366,14 @@ const getStudentAcademicReport = async (req, res) => {
                 $replaceRoot: { newRoot: "$subjects" }
             }
         ])
-    
-       console.log(enrolledSubjects);
-       
+
+        console.log(enrolledSubjects);
+
         // Combine all data
         const academicReport = enrolledSubjects.map(subject => {
             const attendance = attendanceData.find(a => a.subjectCode === subject.subjectCode);
             const marks = marksData.find(m => m.subjectCode === subject.subjectCode);
-    
+
             return {
                 subjectCode: subject.subjectCode,
                 subjectName: subject.subjectName,
@@ -380,16 +389,16 @@ const getStudentAcademicReport = async (req, res) => {
                 } : null
             };
         });
-    
-       res.json({success : true , studentReport : academicReport})
+
+        res.json({ success: true, studentReport: academicReport })
     } catch (error) {
-        console.error( error);
+        console.error(error);
         throw error;
     }
-   
-   
+
+
 };
 
 
 
-export { handleAdminLogin, handleAdminSignup, getAttendanceDashboard, getSubjectsAverageAttendance ,getStudentReport , getStudentAcademicReport}
+export { handleAdminLogin, handleAdminSignup, getAttendanceDashboard, getSubjectsAverageAttendance, getStudentReport, getStudentAcademicReport }

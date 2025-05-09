@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken"
 const facultyAuth = async (req , res , next) => {
     try {
         const authorization = req.headers.authorization
+        console.log(req);
+        
         const token = authorization.split(" ")[1]
         
         const verifyToken = jwt.verify(token , process.env.JWT_SECRET_KEY)

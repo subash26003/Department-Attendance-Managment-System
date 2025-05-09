@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import mongoose from "mongoose";
 import otpModel from "../../models/optModel.js";
 import { sendOTPToStudent } from "../../services/OtpService.js";
+import markModel from "../../models/markModel.js";
 
 const handleSignUp = async (req, res) => {
     try {
@@ -32,7 +33,7 @@ const handleSignUp = async (req, res) => {
             return
         }
 
-        await studentModel.findOneAndUpdate({ registerNo: regNo }, { $set: {email: email} })
+        await studentModel.findOneAndUpdate({ registerNo: regNo }, { $set: { email: email } })
 
         res.json({ success: true, message: 'Signed' })
     } catch (error) {
@@ -42,30 +43,30 @@ const handleSignUp = async (req, res) => {
 }
 
 const tokenGenerate = async (payload) => {
-    const token = await jwt.sign(payload , process.env.JWT_SECRET_KEY)
+    const token = await jwt.sign(payload, process.env.JWT_SECRET_KEY)
     return token
 }
 
-const handleLogin = async (req , res) => {
+const handleLogin = async (req, res) => {
     try {
-        const {email} = req.body
-        const student = await studentModel.findOne({email : email})
-        if(!student){
+        const { email } = req.body
+        const student = await studentModel.findOne({ email: email })
+        if (!student) {
             res.json({ success: false, message: "Not Registered" })
             return
         }
-        const otpData = await otpModel.findOne({email : email})
+        const otpData = await otpModel.findOne({ email: email })
 
-        if(otpData){
-            res.json({success:false , message : "OTP already sent"})
-            return 
+        if (otpData) {
+            res.json({ success: false, message: "OTP already sent" })
+            return
         }
         const OTP = Math.floor(100000 + Math.random() * 900000).toString();
-        const expireTime  = new Date(Date.now() + (5 * 60 * 1000)) 
-        const otp = await otpModel.insertOne({email : email , otp : OTP , expireAt : expireTime})
-        
-        sendOTPToStudent(email , OTP)
-        res.json({success : true , message : "OPT sent"})
+        const expireTime = new Date(Date.now() + (5 * 60 * 1000))
+        const otp = await otpModel.insertOne({ email: email, otp: OTP, expireAt: expireTime })
+
+        sendOTPToStudent(email, OTP)
+        res.json({ success: true, message: "OPT sent" })
 
     } catch (error) {
         console.error(error);
@@ -73,24 +74,24 @@ const handleLogin = async (req , res) => {
     }
 }
 
-const handleVerifyOtp = async (req , res) => {
+const handleVerifyOtp = async (req, res) => {
     try {
-        const {email , otp} = req.body 
+        const { email, otp } = req.body
         console.log(req.body);
-        
-        const otpData = await otpModel.findOne({email : email})
+
+        const otpData = await otpModel.findOne({ email: email })
         console.log(otpData.otp);
-        
-        if(otpData.otp !== otp){
-            res.json({success : false , message : "Invalid OTP"})
-            return 
+
+        if (otpData.otp !== otp) {
+            res.json({ success: false, message: "Invalid OTP" })
+            return
         }
 
         await otpModel.deleteOne({ email })
 
-        const student = await studentModel.findOne({email : email})
-        const token = await tokenGenerate({regNo : student.registerNo})
-        res.json({success : true , token})
+        const student = await studentModel.findOne({ email: email })
+        const token = await tokenGenerate({ regNo: student.registerNo })
+        res.json({ success: true, token })
 
     } catch (error) {
         console.error(error.message);
@@ -149,7 +150,7 @@ const getSubjectWisePercentage = async (studentId) => {
 
         console.log(data);
         console.error("---".repeat(50));
-        
+
         const subjects = await studentModel.aggregate([
             {
                 $match: { _id: new mongoose.Types.ObjectId(studentId) }
@@ -201,27 +202,187 @@ const getSubjectWisePercentage = async (studentId) => {
     }
 }
 
-
-const handleInitialData = async (req , res) => {
+const getAcademicReport = async (studentId) => {
     try {
-        const {regNo}  = req
+        const studentObjectId = new mongoose.Types.ObjectId(studentId);
 
-        const student = await studentModel.findOne({registerNo : regNo})
-        
-        if(!student){
+        // Get attendance data with percentages
+        const attendanceData = await attendanceRecordModel.aggregate([
+            {
+                $match: {
+                    status: "absent",
+                    studentId: studentId
+                }
+            },
+            {
+                $group: {
+                    _id: "$subjectCode",
+                    totalAbsentCount: { $sum: 1 }
+                }
+            },
+            {
+                $lookup: {
+                    from: "subjects",
+                    localField: "_id",
+                    foreignField: "code",
+                    as: "subject"
+                }
+            },
+            {
+                $unwind: "$subject"
+            },
+            {
+                $addFields: {
+                    presentCount: {
+                        $subtract: ["$subject.takenPeriod", "$totalAbsentCount"]
+                    },
+
+                }
+            },
+            {
+                $addFields: {
+                    percentage: {
+
+                        $multiply: [
+                            { $divide: ["$presentCount", "$subject.takenPeriod"] },
+                            100
+                        ]
+
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    subjectCode: "$_id",
+                    attendancePercentage: "$percentage",
+                    presentCount: 1,
+
+                }
+            }
+        ])
+
+        // Get marks data
+        const marksData = await markModel.aggregate([
+            {
+                $match: { studentId: studentId }
+            },
+            {
+                $addFields: {
+                    subjectObjId: { $toObjectId: "$subjectId" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "subjects",
+                    localField: "subjectObjId",
+                    foreignField: "_id",
+                    as: "subject"
+                }
+            },
+            {
+                $unwind: "$subject"
+            },
+
+            {
+                $project: {
+                    _id: 0,
+                    subjectCode: "$subject.code",
+                    internal1: 1,
+                    internal2: 1,
+                }
+            }
+        ])
+
+
+
+        // Get all enrolled subjects
+        const enrolledSubjects = await studentModel.aggregate([
+            {
+                $match: { _id: studentObjectId }
+            },
+            {
+                $lookup: {
+                    from: "subjects",
+                    let: { studentYear: "$studentYear" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ["$year", "$$studentYear"] },
+                                        { $ne: ["$facultyId", null] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                subjectName: "$name",
+                                subjectCode: "$code",
+                                takenPeriod: "$takenPeriod"
+                            }
+                        }
+                    ],
+                    as: "subjects"
+                }
+            },
+            {
+                $unwind: "$subjects"
+            },
+            {
+                $replaceRoot: { newRoot: "$subjects" }
+            }
+        ])
+
+        // Combine all data
+        const academicReport = enrolledSubjects.map(subject => {
+            const attendance = attendanceData.find(a => a.subjectCode === subject.subjectCode);
+            const marks = marksData.find(m => m.subjectCode === subject.subjectCode);
+
+            return {
+                subjectCode: subject.subjectCode,
+                subjectName: subject.subjectName,
+                attendance: {
+                    percentage: attendance?.attendancePercentage ?? 100,
+                    classesAttended: attendance?.presentCount,
+                    totalClasses: subject.takenPeriod
+                },
+                marks: marks ? {
+                    internal1: marks.internal1,
+                    internal2: marks.internal2,
+                    average: marks.average
+                } : null
+            };
+        });
+
+        return academicReport
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+const handleInitialData = async (req, res) => {
+    try {
+        const { regNo } = req
+
+        const student = await studentModel.findOne({ registerNo: regNo })
+
+        if (!student) {
             res.json({ success: false, message: "Student Not Found" })
             return
         }
 
-        const attendanceData = await getSubjectWisePercentage(student._id.toString())
-        
-        const studentData = {student , attendanceData}
-        res.json({success : true , studentData})
+        const studentReport = await getAcademicReport(student._id.toString())
+
+        const studentData = {student, studentReport}
+        res.json({ success: true, studentData })
 
     } catch (error) {
         console.error(error.message);
         res.json({ success: false, message: error.message })
     }
-}  
+}
 
-export { handleSignUp ,handleLogin , handleInitialData , handleVerifyOtp , getSubjectWisePercentage}
+export { handleSignUp, handleLogin, handleInitialData, handleVerifyOtp, getSubjectWisePercentage }
