@@ -55,6 +55,12 @@ const Navbar = () => {
           >
             Marks
           </NavLink>
+          <NavLink
+            to="/att/history"
+            className="navlink text-xl border-blue-500 "
+          >
+            History
+          </NavLink>
         </div>
         <div className="group relative">
           <FaUserCircle className="text-5xl text-gray-400 cursor-pointer" />
@@ -131,6 +137,13 @@ const Navbar = () => {
             className="nav-links py-4 px-4 border-b"
           >
             Marks
+          </NavLink>
+          <NavLink
+            onClick={() => setShowMenu(false)}
+            to="/att/history"
+            className="nav-links py-4 px-4 border-b"
+          >
+            History
           </NavLink>
           <NavLink
             onClick={() => setShowMenu(false)}

@@ -33,7 +33,8 @@ const Subjects = () => {
         const options = {
           headers : {
             Authorization : `Bearer ${token}`
-          }
+          },
+          
         }
         const response = await api.get(`/liststudent/${code}`, options)
         const data = response.data

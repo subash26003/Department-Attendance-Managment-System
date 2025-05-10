@@ -12,6 +12,7 @@ import Requests from './pages/Requests'
 import NotFound from './components/stateLessComponents/NotFound'
 import MarksUpload from './pages/MarksUpload'
 import StudentReport from './pages/StudentReport'
+import AttendanceHistory from './pages/AttendanceHistory'
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/mysubjects" element={<Subjects />} />
             <Route path='/markupload' element={<MarksUpload />} />
             <Route path='/studentreport' element={<StudentReport />} />
+            <Route path='/att/history' element={<AttendanceHistory />} />
           </Route>
           
           <Route path='/login' element={<Login />} />

@@ -13,6 +13,7 @@ import otpModel from "../models/optModel.js";
 import markModel from "../models/markModel.js";
 import sendMessageToParents from "../services/smsService.js";
 import mongoose from "mongoose";
+import attendanceRecordModel from "../models/attendanceRecordModel.js";
 
 
 const generateToken = async (payload) => {
@@ -221,10 +222,10 @@ const getStudentListWithAttendancePercentage = async (req, res) => {
 
 // Daily Attendance
 const getTodaySubjectAttendanceList = async (req, res) => {
-    
+
 
     try {
-        const { subjectCode, period , day} = req.query
+        const { subjectCode, period, day } = req.query
         const data = await dailyAttendanceModel.aggregate([
             { $match: { subjectCode: subjectCode, day: day, period: parseInt(period) } },
             {
@@ -273,36 +274,36 @@ const getTodaySubjectAttendanceList = async (req, res) => {
     }
 }
 
-const updateDailyAttendance = async (req , res , next) => {
+const updateDailyAttendance = async (req, res, next) => {
     try {
-        const { subjectCode, period , day , registerNo , action} = req.body
+        const { subjectCode, period, day, registerNo, action } = req.body
 
-        console.log(subjectCode , period , day);
-        
-        
-        const attendance = await dailyAttendanceModel.findOne({subjectCode , period : Number.parseInt(period) , day})
+        console.log(subjectCode, period, day);
+
+
+        const attendance = await dailyAttendanceModel.findOne({ subjectCode, period: Number.parseInt(period), day })
         console.log(attendance);
-        
-        if(action === "remove"){
+
+        if (action === "remove") {
             attendance.absentRegisterNos = attendance.absentRegisterNos.filter(no => no !== registerNo);
-        }else{
+        } else {
             if (!attendance.absentRegisterNos.includes(registerNo)) {
                 attendance.absentRegisterNos.push(registerNo);
             }
         }
         await attendance.save();
-        req.query.subjectCode = subjectCode; 
-        req.query.period = period; 
-        req.query.day = day; 
+        req.query.subjectCode = subjectCode;
+        req.query.period = period;
+        req.query.day = day;
 
         console.log(attendance);
-        
+
         next();
-                
+
     } catch (error) {
-        res.json({success : false , message : "Server Error"})
+        res.json({ success: false, message: "Server Error" })
         console.log(error);
-        
+
     }
 }
 
@@ -451,19 +452,19 @@ const sendStudentReport = async (req, res) => {
     try {
         const { studentData } = req.body
         console.log(studentData);
-        
-        const student = await studentModel.findById({_id : new mongoose.Types.ObjectId(studentData.studentId)})
+
+        const student = await studentModel.findById({ _id: new mongoose.Types.ObjectId(studentData.studentId) })
         console.log(student);
-        
+
         let message = `Report - ${student.name}\n`;
 
         studentData.report.forEach((subj, i) => {
             message += `${i + 1}) ${subj.subjectCode} - M:${subj.marks.internal1}, A:${subj.attendance.percentage}%\n`;
         });
 
-        
 
-        await sendMessageToParents(message , student.parentMobileNo)
+
+        await sendMessageToParents(message, student.parentMobileNo)
         res.json({ success: true })
 
     } catch (error) {
@@ -472,5 +473,69 @@ const sendStudentReport = async (req, res) => {
     }
 }
 
+// Functions for getting history Datas
 
-export { handleLogin, getInitialData, getStudentListWithAttendancePercentage, getTodaySubjectAttendanceList, getRequestList, handleRequestApprovel, verifyOtp, uploadSubjectMarks, getStudentListWithMarks, sendStudentReport ,updateDailyAttendance}
+const getStudentHistoryAttendance = async (req, res) => {
+    try {
+        console.log(req);
+        const { startDate, endDate } = req.query
+        const { subjectCode } = req.params
+        const subject = await subjectModel.findOne({ code: subjectCode })
+        const studentList = await studentModel.aggregate([
+            {
+                $match: {
+                    studentYear: subject.year,
+                }
+            },
+            { $addFields: { studentId: { $toString: "$_id" } } },
+            {
+                $project: {
+                    _id: 0,
+                    name: 1,
+                    registerNo: 1,
+                    studentId: 1,
+                    studentYear: 1
+                },
+            },
+            { $sort: { registerNo: 1 } }
+        ])
+
+
+        const attendanceHistory = await attendanceRecordModel.aggregate([
+            {
+                $match: {
+                    subjectCode: subjectCode,
+                    ...(startDate && endDate && {
+                        recordedAt: {
+                            $gte: new Date(startDate).toISOString(),
+                            $lte: new Date(endDate).toISOString()
+                        }
+                    })
+                }
+            },
+            {
+                $project: {
+                    studentId: 1,
+                    recordedAt: 1,
+                    period: 1
+                }
+            },
+            {
+                $sort: {
+                    recordedAt: 1
+                }
+            }
+        ]);
+
+
+        res.json({ success: true, data: { studentList, attendanceHistory } })
+
+    } catch (error) {
+        res.json({ success: false, message: "Server Error" })
+        console.log(error);
+
+    }
+}
+
+
+export { handleLogin, getInitialData, getStudentListWithAttendancePercentage, getTodaySubjectAttendanceList, getRequestList, handleRequestApprovel, verifyOtp, uploadSubjectMarks, getStudentListWithMarks, sendStudentReport, updateDailyAttendance, getStudentHistoryAttendance }

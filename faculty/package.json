@@ -13,6 +13,7 @@
     "@react-pdf/renderer": "^4.3.0",
     "@tailwindcss/vite": "^4.0.17",
     "axios": "^1.8.4",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "js-cookie": "^3.0.5",
     "jspdf": "^3.0.1",
