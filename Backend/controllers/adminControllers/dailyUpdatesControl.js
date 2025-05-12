@@ -4,6 +4,8 @@ import { dailyAttendanceModel } from "../../models/DbModels.js";
 
 const getCurrentAttendance = async (year , day) => {
     try {
+      console.log(year , day);
+      
         const data = await dailyAttendanceModel.aggregate([
             { $match: { year: year , day : day}},
             {
@@ -46,7 +48,7 @@ const getCurrentAttendance = async (year , day) => {
               }
             },
             { $sort: { period: 1 } }
-          ]).toArray();
+          ])
 
         const timeTable = await timeTableModel.findOne({ year:year, day: day})
 

@@ -59,7 +59,7 @@ const handleRequest = async (req, res) => {
 
 const getRequestList = async (req, res) => {
     try {
-        const requestList = await requestModel.find({})
+        const requestList = await requestModel.find({}).sort({_id : -1})
         res.json({ success: true, requestList })
     } catch (error) {
         console.log(error.message)

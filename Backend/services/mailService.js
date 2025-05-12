@@ -3,10 +3,10 @@ import nodemailer from 'nodemailer'
 import mongoose from "mongoose";
 import facultyModel from "../models/adminModels/facultyModel.js";
 import requestModel from "../models/requestModel.js";
+import { adminDataModel } from "../models/DbModels.js";
 
 const fromMail = process.env.GMAIL
 const password = process.env.APP_PASSWORD
-const hodMail = process.env.HOD_MAIL
 
 const sendMailToFaculty = async (requestData) => {
     try {
@@ -28,7 +28,7 @@ const sendMailToFaculty = async (requestData) => {
         const mailOptions = {
             from : fromMail,
             to: faculty.email.trim(),
-            subject : `New Request From ${requestData.requestType} Student`,
+            subject : `New Request For ${requestData.requestType} from Student`,
             html: `
             <h3>New  ${requestData.requestType} Request</h3>
             <p><strong>Student:</strong> ${requestData.name}</p>
@@ -41,6 +41,7 @@ const sendMailToFaculty = async (requestData) => {
           `,
 
         }
+        
         await transporter.sendMail(mailOptions)
         console.log("Mail Sent");
         
@@ -52,10 +53,13 @@ const sendMailToFaculty = async (requestData) => {
 
 const sendMailToHOD = async (requestData) => {
     try {
+        const adminData = await adminDataModel.findOne({})
+        const {hodMail} = adminData 
+
         const transporter = nodemailer.createTransport({
             service : 'gmail',
             auth : {
-                user : fromMail,
+                user : email,
                 pass : password
             }
         })
@@ -63,7 +67,7 @@ const sendMailToHOD = async (requestData) => {
         const mailOptions = {
             from : fromMail,
             to: hodMail.trim(),
-            subject :  `New Request From ${requestData.requestType} Student`,
+            subject :  `New Request For ${requestData.requestType} from Student`,
             html: `
             <h3>New  ${requestData.requestType} Request</h3>
             <p><strong>Student:</strong> ${requestData.name}</p>

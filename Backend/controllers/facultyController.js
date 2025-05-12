@@ -314,7 +314,7 @@ const getRequestList = async (req, res) => {
             res.json({ success: false, message: "No Request List" })
             return
         }
-        const list = await requestModel.find({ sender: 'student', studentYear: faculty.classAdvisor })
+        const list = await requestModel.find({ sender: 'student', studentYear: faculty.classAdvisor }).sort({_id : -1})
         console.log(list);
 
         res.json({ success: true, requestList: list })

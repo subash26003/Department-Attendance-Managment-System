@@ -9,6 +9,7 @@ export default function Signup() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const reEnterPasswordRef = useRef(null);
+  const hodMailRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -35,9 +36,12 @@ export default function Signup() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+     console.log("Pressed");
     let email = emailRef.current.value;
     let password = passwordRef.current.value;
-
+    let hodMail = hodMailRef.current.value;
+   
+    
     if (password != reEnterPasswordRef.current.value) {
       toast.info("Password Not Match");
       passwordRef.current.value = "";
@@ -53,7 +57,7 @@ export default function Signup() {
       toast.info("Enter the valid Password");
       return;
     }
-    let formData = { email, password };
+    let formData = { email, password , hodMail};
     console.log(formData);
     signupRequest(formData);
   };
@@ -71,6 +75,16 @@ export default function Signup() {
               type="email"
               name="email"
               ref={emailRef}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600 mb-1">HOD Mail</label>
+            <input
+              type="email"
+              name="email"
+              ref={hodMailRef}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               required
             />

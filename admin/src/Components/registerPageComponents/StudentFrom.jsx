@@ -78,6 +78,7 @@ const StudentFrom = ({ mode = "register", studentData = {} }) => {
       mobileNo: "",
       regNo: "",
       parentMobileNo: "",
+      fingerID : ""
     }));
   };
 
@@ -186,6 +187,31 @@ const StudentFrom = ({ mode = "register", studentData = {} }) => {
             pattern="[0-9]*"
             inputMode="numeric"
             maxLength="10"
+            className="border border-gray-500  h-10 p-2 rounded min-w-full"
+            onInput={(e) =>
+              (e.target.value = e.target.value.replace(/\D/g, ""))
+            }
+            required
+          />
+        </div>
+
+        <div className="flex flex-col gap-1 w-full md:w-[75%]">
+          <label
+            htmlFor="fingerID"
+            className="text-gray-950 font-semibold"
+          >
+            Finger Id
+          </label>
+          <input
+            value={formData.fingerID}
+            onChange={onChangeHandler}
+            type="number"
+            id="fingerID"
+            name="fingerID"
+            placeholder="Enter the Finger Id"
+            pattern="[0-9]*"
+            inputMode="numeric"
+            maxLength="3"
             className="border border-gray-500  h-10 p-2 rounded min-w-full"
             onInput={(e) =>
               (e.target.value = e.target.value.replace(/\D/g, ""))

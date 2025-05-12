@@ -19,7 +19,9 @@ const generateToken = async (payload) => {
 const handleAdminLogin = async (req, res) => {
     try {
         const { email, password } = req.body
-        const admin = await adminDataModel.findOne({ email: email })
+        console.log(email , password);
+        
+        const admin = await adminDataModel.findOne({})
         console.log(admin);
 
         if (!admin) {
@@ -33,7 +35,6 @@ const handleAdminLogin = async (req, res) => {
             res.json({ success: true, token: await generateToken({ email }) })
             return
         }
-
         res.json({ success: false, message: 'Invalid Credentials' })
     } catch (error) {
         console.log(error)
@@ -44,20 +45,19 @@ const handleAdminLogin = async (req, res) => {
 
 const handleAdminSignup = async (req, res) => {
     try {
-        const { email, password } = req.body
+        const { email, password , hodMail} = req.body
 
         const admin = await adminDataModel.findOne({})
 
-        if (admin) {
-            res.json({ success: false, message: "Not Authorized" })
+        if (admin){
+            res.json({ success: false, message: "Not Authorized"})
             return
         }
 
         const hashedPass = await bcrypt.hash(password, 10)
 
-        const newAdmin = await adminDataModel.insertOne({ email, password: hashedPass })
-        console.log(newAdmin);
-
+        const newAdmin = await adminDataModel.insertOne({ email, password: hashedPass , hodMail })
+        
         res.json({ success: true, message: "Signup successfull" })
 
     } catch (error) {

@@ -51,4 +51,5 @@ adminRoute.post("/updaterequest", handleRequest)
 adminRoute.get('/dashboard', getAttendanceDashboard )
 adminRoute.get("/student/report" , adminAuth , getStudentReport)
 adminRoute.get("/report" , getStudentAcademicReport)
+
 export default adminRoute

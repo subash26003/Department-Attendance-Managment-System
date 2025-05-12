@@ -9,9 +9,6 @@ const AttendanceSummary = ({ data = []}) => {
     (student) => Number.parseInt(student.attendancePercentage) < 75
   ).length;
   
-  const attendanceRate =
-    totalRecords > 0 ? ((above75 / totalRecords) * 100).toFixed(1) : 0;
-
   const average =
     data.reduce(
       (a, student) => a + Number.parseInt(student.attendancePercentage),
@@ -34,12 +31,6 @@ const AttendanceSummary = ({ data = []}) => {
         <div className="bg-red-50 p-4 rounded-lg">
           <h3 className="text-sm font-medium text-red-800">Below 75%</h3>
           <p className="text-2xl font-bold">{below75}</p>
-        </div>
-        <div className="bg-purple-50 p-4 rounded-lg">
-          <h3 className="text-sm font-medium text-purple-800">
-            Attendance Rate
-          </h3>
-          <p className="text-2xl font-bold">{attendanceRate}%</p>
         </div>
         <div className="bg-purple-50 p-4 rounded-lg">
           <h3 className="text-sm font-medium text-purple-800">Average</h3>

@@ -48,9 +48,15 @@ const StudentDashboard = () => {
     { attended: 0, total: 0 }
   );
 
-  const overallPercentage = Math.round(
-    (overallAttendance.attended / overallAttendance.total) * 100
-  );
+  const overallPercentage = useMemo(() => {
+    let sum = 0 
+    studentReport.forEach(item => {
+      sum += item.attendance.percentage
+    })
+    return Math.ceil(sum / studentReport.length)
+  },[studentReport])
+
+  
 
   // Prepare data for charts
   const attendanceChartData = {
@@ -246,7 +252,7 @@ const StudentDashboard = () => {
                               : "text-red-600"
                           }`}
                         >
-                          {subject.attendance.percentage}%
+                          {Math.ceil(subject.attendance.percentage)}%
                         </span>
                         <div className="ml-3 w-24 bg-gray-200 rounded-full h-2.5">
                           <div

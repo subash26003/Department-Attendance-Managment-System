@@ -29,16 +29,19 @@ const RequestList = ({ requestList , handleRequestStatus}) => {
     }
 
     try {
+
       const options = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
+
       const response = await api.post(
         "/updaterequest",
         { requestId: request._id, action: action },
         options
       );
+
       const { data } = response;
       if(data.success){
         toast.info("Request Updated");
@@ -111,7 +114,7 @@ const RequestList = ({ requestList , handleRequestStatus}) => {
                 </div>
                 {(request.status !== "rejected" && request.status !== "approved")&& (
                   <div className="flex justify-between mt-2 ">
-                    {request.status != "approved" ? (<button
+                    {request.status != "approved" && request.status != "verified" ? (<button
                       onClick={() => handleApprove(request, "approve")}
                       className="px-4 font-semibold py-2 hover:cursor-pointer text-white border-0 bg-green-500 rounded"
                     >

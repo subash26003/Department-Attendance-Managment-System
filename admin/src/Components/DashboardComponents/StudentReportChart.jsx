@@ -116,7 +116,7 @@ const AcademicReportCard = ({ reportData, studentDetails }) => {
                   ></div>
                 </div>
                 <p className="text-right mt-1 text-sm font-semibold">
-                  {subject.attendance.percentage}%
+                  {Math.floor(subject.attendance.percentage)}%
                 </p>
               </div>
 

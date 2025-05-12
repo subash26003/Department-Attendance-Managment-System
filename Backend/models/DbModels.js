@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const dailyAttendanceSchema = new mongoose.Schema({
-    
   date: String,
   day: String,
   year: String,
@@ -14,8 +13,21 @@ const dailyAttendanceSchema = new mongoose.Schema({
 const dailyAttendanceModel = mongoose.model("DailyAttendance", dailyAttendanceSchema);
 
 
-const db = mongoose.connection
+const adminDataSchema = new mongoose.Schema({
+  email : {
+    type : String , 
+    required : true
+  },
+  hodMail : {
+    type : String,
+    required : true
+  },
+  password : {
+    type : String,
+    required : true
+  }
+})
 
-const adminDataModel = db.collection("adminData")
+const adminDataModel = mongoose.models.adminData || mongoose.model("adminData" , adminDataSchema)
 
 export {dailyAttendanceModel , adminDataModel}
