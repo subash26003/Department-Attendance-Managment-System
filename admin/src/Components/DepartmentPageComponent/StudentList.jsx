@@ -1,15 +1,17 @@
 import api from "../../api/api";
 import Tab from "../stateLessComponents/Tab";
-import { API_STATUS, CLASS_LIST } from "../../app/appConstants";
+import { API_STATUS } from "../../app/appConstants";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import Loader from "../stateLessComponents/Loader";
 import FailueView from "../stateLessComponents/FailueView";
 import AttendanceReportGenerator from "../ReportGenerator/AttendanceReportGenerator";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
 
 const StudentList = () => {
-  const [currentTab, setCurrentTab] = useState(CLASS_LIST[0]);
+  const {classList} = useSelector((state) => state.department)
+  const [currentTab, setCurrentTab] = useState(classList[0] || '');
 
   const [studentList, setStudentList] = useState([]);
 
@@ -61,6 +63,8 @@ const StudentList = () => {
   const handleInfo = (student) => {
     navigate("/editstudent" , {state : {studentData : student}})
   }
+
+  
 
   const rederSuccessView = () => {
     // console.log(studentList);
@@ -155,6 +159,7 @@ const StudentList = () => {
         <div className="md:hidden space-y-4">
           {filteredStudents.map((student) => (
             <div
+              onClick={() => handleInfo(student)}
               key={student._id}
               className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow"
             >
@@ -220,7 +225,7 @@ const StudentList = () => {
   return (
     <div className="border border-gray-200 rounded-2xl">
       <Tab
-        tabList={CLASS_LIST}
+        tabList={classList}
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
       />

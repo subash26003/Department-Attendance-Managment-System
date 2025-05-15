@@ -5,9 +5,12 @@ import { toast } from "react-toastify";
 import InputCard from "../stateLessComponents/InputCard";
 import Heading from "../stateLessComponents/Heading";
 import { SY } from "pdfmake/build/pdfmake";
+import { useNavigate } from "react-router";
 
 const StudentFrom = ({ mode = "register", studentData = {} }) => {
   const { classList } = useSelector((state) => state.department);
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: studentData?.studentName?.split(" ")[1] || "",
@@ -16,31 +19,32 @@ const StudentFrom = ({ mode = "register", studentData = {} }) => {
     mobileNo: studentData?.mobileNo || "",
     regNo: studentData?.registerNo || "",
     year: studentData?.studentYear || "year1",
-    parentMobileNo:studentData?.parentMobileNo || "",
+    parentMobileNo: studentData?.parentMobileNo || "",
+    fingerId: studentData?.fingerId || "",
   });
 
-  const updateStudentData = async (type , data) => {
+  const updateStudentData = async (type, data) => {
     try {
-      if(studentData.email){
-        data.email = studentData.email
+      if (studentData.email) {
+        data.email = studentData.email;
       }
-      const response = await api.put(`/edit/${type}` , data) 
+      const response = await api.put(`/edit/${type}`, data);
       console.log(response.data.success);
-      
-      if(response.data.success){
-        toast.success(response.data.message)
-      }else{
-        toast.error(response.data.message)
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
       toast.error(error.message);
     }
-  }
+  };
   const registerDataInDatabase = async (type, data) => {
     try {
-      if(mode === 'edit') {
-        updateStudentData(type , data)
-        return
+      if (mode === "edit") {
+        updateStudentData(type, data);
+        return;
       }
       const response = await api.post(`/register/${type}`, data);
       const responseData = response.data;
@@ -69,7 +73,7 @@ const StudentFrom = ({ mode = "register", studentData = {} }) => {
     };
     registerDataInDatabase("student", studentData);
 
-    if(mode === "edit") return;
+    if (mode === "edit") return;
 
     setFormData((pre) => ({
       ...pre,
@@ -78,7 +82,7 @@ const StudentFrom = ({ mode = "register", studentData = {} }) => {
       mobileNo: "",
       regNo: "",
       parentMobileNo: "",
-      fingerID : ""
+      fingerId: "",
     }));
   };
 
@@ -86,6 +90,25 @@ const StudentFrom = ({ mode = "register", studentData = {} }) => {
     const { name, value } = e.target;
     setFormData((pre) => ({ ...pre, [name]: value }));
   };
+
+
+  const removeStudent = async () => {
+    try {
+        const {_id} = studentData
+        console.log(_id);
+        
+        const response = await api.delete(`/student/${_id}` )
+        if(response.data.success){
+          toast.success("Removed")
+          navigate("/deptdetails")
+        }else{
+          toast.info("Network Error")
+        }
+    } catch (error) {
+      console.log(error);
+      toast.message(error.message)
+    }
+  }
 
   return (
     <>
@@ -196,18 +219,15 @@ const StudentFrom = ({ mode = "register", studentData = {} }) => {
         </div>
 
         <div className="flex flex-col gap-1 w-full md:w-[75%]">
-          <label
-            htmlFor="fingerID"
-            className="text-gray-950 font-semibold"
-          >
+          <label htmlFor="fingerId" className="text-gray-950 font-semibold">
             Finger Id
           </label>
           <input
-            value={formData.fingerID}
+            value={formData.fingerId}
             onChange={onChangeHandler}
             type="number"
-            id="fingerID"
-            name="fingerID"
+            id="fingerId"
+            name="fingerId"
             placeholder="Enter the Finger Id"
             pattern="[0-9]*"
             inputMode="numeric"
@@ -258,10 +278,20 @@ const StudentFrom = ({ mode = "register", studentData = {} }) => {
             required
           />
         </div>
-
-        <button className="w-40 h-10 bg-teal-400 mt-5 text-white text-xl font-bold rounded hover:cursor-pointer">
-          {mode == "edit" ? "Update" : "Submit"}
-        </button>
+        <div className="flex gap-5 flex-wrap w-full justify-center">
+          <button className="w-40 h-10 bg-teal-400 mt-5 text-white text-xl font-bold rounded hover:cursor-pointer">
+            {mode == "edit" ? "Update" : "Submit"}
+          </button>
+          {mode === "edit" && (
+            <button
+              onClick={removeStudent}
+              type="button"
+              className="w-40 h-10 bg-red-500 mt-5 text-white text-xl font-bold rounded hover:cursor-pointer"
+            >
+              Delete
+            </button>
+          )}
+        </div>
       </form>
     </>
   );

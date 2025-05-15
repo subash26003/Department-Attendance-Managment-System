@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import api from "../api/api";
 import { toast } from "react-toastify";
 import Tab from "./stateLessComponents/Tab";
-import { CLASS_LIST, WEEK_DAYS } from "../app/appConstants";
+import {  WEEK_DAYS } from "../app/appConstants";
 
 const availablePeriods = ["1", "2", "3", "4", "5", "6", "7"];
 const availableTimings = [
@@ -25,7 +25,7 @@ export default function TimetableForm() {
   const { classList, subjectList, status } = useSelector((state) => state.department);
   const { demoTable } = useSelector((state) => state.timetable);
 
-  const [selectedClass, setSelectedClass] = useState(CLASS_LIST[0]);
+  const [selectedClass, setSelectedClass] = useState(classList[0] || '');
   const [timetable, setTimetable] = useState([]);
 
   const filteredSubject = useMemo(() => {
@@ -97,7 +97,7 @@ export default function TimetableForm() {
     <div className="p-3 max-w-screen overflow-y-auto">
       <div className="flex-1">
         <Tab
-          tabList={CLASS_LIST}
+          tabList={classList}
           currentTab={selectedClass}
           setCurrentTab={setSelectedClass}
         />

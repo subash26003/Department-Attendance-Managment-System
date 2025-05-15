@@ -10,10 +10,18 @@ export const API_STATUS = {
   LOADING: "Loading",
   SUCCESS: "SUCCESS",
   FAILURE: "FAILURE",
-  IDLE : "IDLE"
+  IDLE: "IDLE",
 };
 
-export const WEEK_DAYS =  ["Sunday" , "Monday", "Tuesday", "Wednesday", "Thursday", "Friday" , "Saturday"];
+export const WEEK_DAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 const DataProvider = ({ children }) => {
   const token = Cookies.get("jwt_token");
@@ -25,6 +33,7 @@ const DataProvider = ({ children }) => {
   });
 
   const [user, setUser] = useState(token ? true : false);
+  const [semesterDates, setSemesterDates] = useState();
 
   const getInitialData = async () => {
     setApiStatus({ status: API_STATUS.LOADING });
@@ -53,22 +62,53 @@ const DataProvider = ({ children }) => {
     }
   };
 
+  const getSemesterDates = async () => {
+    try {
+      const option = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await api.get("/semester", option);
+
+      const data = response.data;
+      if (data) {
+        let dates = {};
+        data.dates.forEach((item) => {
+          let obj = {};
+          let sDate = item.startDate.split("T")[0];
+          let eDate = item.endDate.split("T")[0];
+          let year = "year" + item.year;
+          obj = {
+            startDate: sDate,
+            endDate: eDate,
+          };
+          dates[year] = obj;
+        });
+        setSemesterDates(dates);
+        console.log(dates);
+        
+      }
+    } catch (error) {
+      console.log(error.message + " ERROR");
+    }
+  };
+
   const setDocumentTitle = (name) => {
     document.title = name;
   };
 
-  
   useEffect(() => {
     if (facultyData?.facultyDetails) {
       const name = facultyData?.facultyDetails.name || "Faculty";
       setDocumentTitle(name);
-      
     }
   }, [facultyData, apiStatus.status]);
 
   useEffect(() => {
     if (user) {
       getInitialData();
+      getSemesterDates();
     }
   }, [token, user]);
 
@@ -77,7 +117,9 @@ const DataProvider = ({ children }) => {
     facultyData,
     apiStatus,
     setFacultyData,
-    setUser, user
+    setUser,
+    user,
+    semesterDates
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

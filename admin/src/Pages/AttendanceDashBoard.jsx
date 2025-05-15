@@ -12,6 +12,8 @@ import StudentAttendanceHistory from "../Components/DashboardComponents/StudentA
 import { useSelector } from "react-redux";
 
 const AttendanceDashBoard = () => {
+  const {dates} = useSelector((state) => state.department)
+
   const [data, setData] = useState();
   const [apiResponse, setApiResponse] = useState({
     status: API_STATUS.LOADING,
@@ -23,8 +25,8 @@ const AttendanceDashBoard = () => {
   const [selectedYear, setSelectedYear] = useState("year1");
   const [selectedSubject, setSelectedSubject] = useState("all");
 
-  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
-  const [endDate, setEndDate] = useState(new Date().toISOString().split("T")[0]);
+  const [startDate, setStartDate] = useState(dates[selectedYear]?.startDate);
+  const [endDate, setEndDate] = useState(dates[selectedYear]?.endDate);
 
   // Filter data based on selections
 

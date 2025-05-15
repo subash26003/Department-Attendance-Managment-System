@@ -18,6 +18,7 @@ import StudentEditor from "./Components/Editors/StudentEditor";
 import FacultyEditor from "./Components/Editors/FacultyEditor";
 import SubjectEditor from "./Components/Editors/SubjectEditor";
 import AttendanceDashBoard from "./Pages/AttendanceDashBoard";
+import SemesterSetup from "./Pages/SemesterSetup";
 
 function App() {
   return (
@@ -41,6 +42,8 @@ function App() {
             <Route path="/editfaculty" element={<FacultyEditor />} />
             <Route path="/editsubject" element={<SubjectEditor />} />
             <Route path="/timetable" element={<TimeTable />} />
+            <Route path="/setup" element={<SemesterSetup />} />
+
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

@@ -30,7 +30,8 @@ const Navbar = () => {
             <div className='group relative'>
                 <FaUserCircle  className='text-5xl text-gray-400 cursor-pointer'/>
                 <div className='group-hover:block hidden absolute right-0 text-xl card-shadow bg-white rounded-lg w-52'>
-                    <p onClick={handleLogout} className=' p-2 text-gray-700 cursor-pointer'>Logout</p>
+                    <p onClick={handleLogout} className='p-2 text-gray-700 cursor-pointer border-b'>Logout</p>
+                    <NavLink to='/setup' className='block p-2 text-gray-700 cursor-pointer'>Semester details</NavLink>
                 </div>
             </div>
         </div>
@@ -45,8 +46,11 @@ const Navbar = () => {
                 <NavLink onClick={() => setShowMenu(false)} to='/' className="nav-links py-4 px-4 border-b">HOME</NavLink>
                 <NavLink onClick={() => setShowMenu(false)} to='/today/update' className="nav-links py-4 px-4 border-b">TODAYUPDATES</NavLink>
                 <NavLink onClick={() => setShowMenu(false)} to='/deptdetails' className="nav-links py-4 px-4 border-b">DEPARTMENT</NavLink>
+                <NavLink onClick={() => setShowMenu(false)} to='/requests' className="nav-links py-4 px-4 border-b">Requests</NavLink>
                 <NavLink onClick={() => setShowMenu(false)} to='/register' className="nav-links py-4 px-4 border-b">Register</NavLink>
                 <NavLink onClick={() => setShowMenu(false)} to='/timetable' className="nav-links py-4 px-4 border-b">Timetable</NavLink>
+                <NavLink onClick={() => setShowMenu(false)} to='/setup' className="nav-links py-4 px-4 border-b">Semester details</NavLink>
+                <p onClick={handleLogout} className="nav-links py-4 px-4 border-b">Logout</p>
             </div>
         </div>
     </div>

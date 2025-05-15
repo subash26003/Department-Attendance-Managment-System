@@ -9,7 +9,8 @@ import Loader from "../components/stateLessComponents/Loader";
 import AttendanceMatrix from "../components/AttendanceMatrix";
 
 const AttendanceHistory = () => {
-  const { facultyData, token } = useContext(DataContext);
+
+  const { facultyData, token , semesterDates} = useContext(DataContext);
 
   const [fromDate, setFromDate] = useState("2025-04-01");
   const [toDate, setToDate] = useState("2025-05-10");
@@ -68,6 +69,16 @@ const AttendanceHistory = () => {
     setApiStatus({ status: API_STATUS.LOADING });
     getAttendanceDatas(code);
   }, [selectedSubject , fromDate , toDate]);
+
+  useEffect(() => {
+    let subject = subjectsList.find(item => item.name == selectedSubject)
+    if(subject){
+      let {year }= subject
+      setFromDate(semesterDates[year]?.startDate)
+      setToDate(semesterDates[year]?.endDate)
+    }
+   
+  },[selectedSubject])
 
   const renderView = (apiStatus) => {
     switch (apiStatus.status) {

@@ -175,9 +175,9 @@ const getInitialData = async (req, res) => {
             return
         }
         // getting the faculty sbjects
-        const subjects = await subjectModel.find({ facultyId: f_id }, { name: 1, code: 1, _id: 1 })
+        const subjects = await subjectModel.find({ facultyId: f_id }, { name: 1, code: 1, _id: 1 , year : 1})
         const subjectArray = subjects.map(item => {
-            return { name: item.name, code: item.code, _id: item._id.toString() }
+            return { name: item.name, code: item.code, _id: item._id.toString() , year : item.year}
         })
         let studentList = []
         if (faculty.classAdvisor?.length > 0) {

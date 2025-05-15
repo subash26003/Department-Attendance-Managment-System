@@ -455,7 +455,9 @@ const getAllStudentAttendancePercentage = async (year) => {
           studentYear: 1,
           mobileNo: 1,
           gender: 1,
-          email: 1 || ""
+          fingerId : 1,
+          email: 1 || "",
+          parentMobileNo : 1,
         }
       },
       { $sort: { registerNo: 1 } }

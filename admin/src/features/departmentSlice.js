@@ -12,11 +12,34 @@ export const getSubjectList = createAsyncThunk("department/getSubjectList" , asy
     return response.data
 })
 
+export const getSemesterData = createAsyncThunk("department/getSemesterData" , async () => {
+    const response = await api.get("/semesters")
+    const data = response.data
+    let numOfYears = data.noOfYears
+    let dates = {}
+    data.dates.forEach(item => {
+            let obj = {};
+            let sDate = item.startDate.split("T")[0]
+            let eDate = item.endDate.split("T")[0]
+            let year = "year" + item.year 
+            obj =  {
+                startDate : sDate,
+                endDate : eDate
+            }
+            dates[year] = obj
+          })
+    
+    const classes = Array.from({length : numOfYears} , (_ , i) => 'year' + ( i + 1))
+
+    return {classes , dates}
+})
+
 const initialState = {
     facultyList : [],
     subjectList:[],
     status : API_STATUS.LOADING,
-    classList : ['year1' , 'year2'],
+    classList : [],
+    dates : {}
 }
 
 const departmentSlice = createSlice({
@@ -50,6 +73,10 @@ const departmentSlice = createSlice({
             state.subjectList = action.payload.data
             state.status = API_STATUS.SUCCESS
             // console.log(action.payload.data)
+        })
+        .addCase(getSemesterData.fulfilled , (state , action) => {
+            state.classList = action.payload.classes
+            state.dates = action.payload.dates
         })
     }
 

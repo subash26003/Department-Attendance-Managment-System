@@ -73,7 +73,7 @@ const listStudentWithAttendancePer = async (req, res) => {
         }
 
         const studentList = await studentModel.find({ studentYear: year })
-
+        
         res.json({ success: true, studentList: studentList })
 
     } catch (error) {

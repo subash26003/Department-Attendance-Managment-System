@@ -8,6 +8,7 @@ import { getSubjectWisePercentage } from "../studentControllers/studentControlle
 import markModel from "../../models/markModel.js"
 import studentModel from "../../models/adminModels/studentModel.js"
 import mongoose from "mongoose"
+import semesterModel from "../../models/adminModels/semesterModel.js"
 
 
 const generateToken = async (payload) => {
@@ -19,8 +20,8 @@ const generateToken = async (payload) => {
 const handleAdminLogin = async (req, res) => {
     try {
         const { email, password } = req.body
-        console.log(email , password);
-        
+        console.log(email, password);
+
         const admin = await adminDataModel.findOne({})
         console.log(admin);
 
@@ -45,19 +46,19 @@ const handleAdminLogin = async (req, res) => {
 
 const handleAdminSignup = async (req, res) => {
     try {
-        const { email, password , hodMail} = req.body
+        const { email, password, hodMail } = req.body
 
         const admin = await adminDataModel.findOne({})
 
-        if (admin){
-            res.json({ success: false, message: "Not Authorized"})
+        if (admin) {
+            res.json({ success: false, message: "Not Authorized" })
             return
         }
 
         const hashedPass = await bcrypt.hash(password, 10)
 
-        const newAdmin = await adminDataModel.insertOne({ email, password: hashedPass , hodMail })
-        
+        const newAdmin = await adminDataModel.insertOne({ email, password: hashedPass, hodMail })
+
         res.json({ success: true, message: "Signup successfull" })
 
     } catch (error) {
@@ -235,10 +236,10 @@ const getStudentAcademicReport = async (req, res) => {
                     studentId: studentId,
                     ...(startDate && endDate && {
                         recordedAt: {
-                          $gte: new Date(startDate).toISOString(),
-                          $lte: new Date(endDate).toISOString()
+                            $gte: new Date(startDate).toISOString(),
+                            $lte: new Date(endDate).toISOString()
                         }
-                      })
+                    })
                 }
             },
 
@@ -400,5 +401,42 @@ const getStudentAcademicReport = async (req, res) => {
 };
 
 
+export const updateSemesterData = async (req, res) => {
+    try {
+        const { noOfYears, dates } = req.body;
+        console.log(req.body);
+        
+        const updated = await semesterModel.findOneAndUpdate(
+            {},
+            { noOfYears, dates },
+            { new: true, upsert: true }
+        );
+
+        res.status(200).json({ message: "Semester data saved", data: updated });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export const getSemesterData = async (req , res) => {
+     try {
+    const semester = await semesterModel.findOne();
+    if (semester) return res.json(semester);
+    return res.status(404).json({ message: "No semester found" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export const removeStudent = async (req , res) => {
+    try {
+        const {_id} = req.params
+        await studentModel.deleteOne({_id : _id})
+        res.json({success : true})
+    } catch (error) {
+        console.log(error);
+        res.json({success : false , message : "Network Error"})
+    }
+} 
 
 export { handleAdminLogin, handleAdminSignup, getAttendanceDashboard, getSubjectsAverageAttendance, getStudentReport, getStudentAcademicReport }

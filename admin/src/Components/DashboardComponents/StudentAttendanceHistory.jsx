@@ -81,7 +81,7 @@ const StudentAttendanceHistory = ({ data , startDate , endDate }) => {
         </label>
         <select
           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          value={selectedStudent}
+          value={selectedStudent.name}
           onChange={async (e) => {
             handleSelectStudent(e.target.value)
           }}

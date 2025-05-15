@@ -6,10 +6,11 @@ import api from '../api/api'
 import Loader from './stateLessComponents/Loader'
 import FailueView from './stateLessComponents/FailueView'
 import AttendanceDisplay from './HomePageComponents/AttendanceDisplay'
+import { useSelector } from 'react-redux'
 
 const CurrentClassAttendance = () => {
-
-    const [selectedClass , setSelectedClass] = useState(CLASS_LIST[0])
+    const {classList} = useSelector((state) => state.department)
+    const [selectedClass , setSelectedClass] = useState(classList[0] || '')
     const [apiResponse , setApiResponse] = useState({status : API_STATUS.LOADING , errMsg : ""})
 
     const [currentClassAttendance , setCurrentClassAttendance] = useState();
@@ -54,9 +55,10 @@ const CurrentClassAttendance = () => {
 
   return (
     <div>
-        <Tab tabList={CLASS_LIST} currentTab={selectedClass} setCurrentTab={setSelectedClass}/>
+        <Tab tabList={classList} currentTab={selectedClass} setCurrentTab={setSelectedClass}/>
         <div>
-            {renderView(apiResponse)}
+            {!classList || classList?.length == 0 ? <p>Update the semester Details First</p> : 
+            renderView(apiResponse)}
         </div>
     </div>
   )

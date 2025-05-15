@@ -6,7 +6,7 @@ import { getFacultyList, registerFaculty, updateFacultyData } from "../controlle
 import { uploadTimeTable, getTimetableData } from "../controllers/adminControllers/timetableControl.js";
 import { getTodayUpdate } from "../controllers/adminControllers/dailyUpdatesControl.js";
 import { getRequestList, handleRequest } from "../controllers/adminControllers/requestsControl.js";
-import { getAttendanceDashboard, getStudentAcademicReport, getStudentReport, handleAdminLogin, handleAdminSignup } from "../controllers/adminControllers/adminControl.js";
+import { getAttendanceDashboard, getSemesterData, getStudentAcademicReport, getStudentReport, handleAdminLogin, handleAdminSignup, removeStudent, updateSemesterData } from "../controllers/adminControllers/adminControl.js";
 import adminAuth from "../middleware/adminAuth.js";
 import subjectModel from "../models/adminModels/subjectModel.js";
 import attendanceRecordModel from "../models/attendanceRecordModel.js";
@@ -19,11 +19,15 @@ const adminRoute = express.Router()
 adminRoute.post("/login", handleAdminLogin)
 adminRoute.post("/signup", handleAdminSignup)
 
+//Semester Data
+adminRoute.post("/semesters" , updateSemesterData)
+adminRoute.get("/semesters" , getSemesterData)
+
 // Student register and listing
 adminRoute.post("/register/student", registerStudent)
 adminRoute.get("/studentList", getClassWiseStudentList)
 adminRoute.get("/studenList/:year", listStudentWithAttendancePer)
-
+adminRoute.delete("/student/:_id" , removeStudent)
 //Edit data
 adminRoute.put("/edit/student", editStudentData)
 adminRoute.put("/edit/faculty", updateFacultyData)
